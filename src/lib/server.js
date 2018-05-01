@@ -4,16 +4,19 @@ import express from 'express';
 import mongoose from 'mongoose';
 import logger from './logger';
 import shoesRoutes from '../route/shoes-router';
+import loggerMiddleware from './logger-middleware';
+import errorMiddleware from './error-middleware';
 
 const app = express();
 let server = null;
 
-
+app.use(loggerMiddleware);
 app.use(shoesRoutes);
 app.all('*', (request, response) => {
   logger.log(logger.INFO, 'Returning a 404 from the catch-all/default route');
   return response.sendStatus(404);
 });
+app.user(errorMiddleware);
 
 const startServer = () => {
   return mongoose.connect(process.env.MONGODB_URI)

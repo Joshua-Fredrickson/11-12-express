@@ -2,6 +2,7 @@
 
 import { Router } from 'express';
 import bodyParser from 'body-parser';
+import HttpErro
 import Shoes from '../model/shoes';
 import logger from '../lib/logger';
 
