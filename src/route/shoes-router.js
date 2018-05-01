@@ -51,4 +51,26 @@ shoesRouter.get('/api/shoes/:id', (request, response) => {
     });
 });
 
+
+shoesRouter.delete('/api/shoes/:id', (request, response) => {
+  logger.log(logger.INFO, 'GET - processing a request');
+
+  return Shoes.findByIdAndRemove(request.params.id)
+    .then((shoes) => {
+      if (!shoes.id()) {
+        logger.log(logger.INFO, 'DELETE - responding with a 404 status code - (!shoes)');
+        return response.sendStatus(404);
+      }
+      logger.log(logger.INFO, 'DELETE - responding with a 200 status code');
+      return response.json(shoes);
+    })
+    .catch((error) => {
+      if (error.message.toLowerCase().indexOf('cast to objectid failed') > -1) {
+        logger.log(logger.INFO, 'DELETE - responding with a 400 status code - objectId');
+        logger.log(logger.VERBOSE, `Could not parse the specific object id ${request.params.id}`);
+        return response.sendStatus(400);
+      }
+    });
+});
+
 export default shoesRouter;
