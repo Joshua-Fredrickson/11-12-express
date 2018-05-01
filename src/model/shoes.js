@@ -10,6 +10,7 @@ const shoesSchema = mongoose.Schema({
   },
   sport: {
     type: String,
+    required: true,
   },
   quantity: {
     type: String,

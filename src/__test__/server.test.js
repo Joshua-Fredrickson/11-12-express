@@ -61,7 +61,7 @@ describe('/api/shoes', () => {
         });
     });
     test('should respond with 404 if there is an invalid ID', () => {
-      return superagent.get(`${apiURL}/ThisIsAnInvalidId`)
+      return superagent.get(`${apiURL}/ThisIsAnInvalidId1`)
         .then(Promise.reject)
         .catch((response) => {
           expect(response.status).toEqual(404);

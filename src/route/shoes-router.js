@@ -40,7 +40,7 @@ shoesRouter.get('/api/shoes/:id', (request, response) => {
       return response.json(shoes);
     })
     .catch((error) => {
-      if (error.message.toLowerCase().indexOf('cast to object id failed') > -1) {
+      if (error.message.toLowerCase().indexOf('cast to objectid failed') > -1) {
         logger.log(logger.INFO, 'GET - responding with a 404 status code - objectId');
         logger.log(logger.VERBOSE, `Could not parse the specific object id ${request.params.id}`);
         return response.sendStatus(404);
