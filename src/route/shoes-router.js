@@ -2,7 +2,7 @@
 
 import { Router } from 'express';
 import bodyParser from 'body-parser';
-import HttpErro
+import HttpErrors from 'http-errors';
 import Shoes from '../model/shoes';
 import logger from '../lib/logger';
 
@@ -10,51 +10,52 @@ const jsonParser = bodyParser.json();
 
 const shoesRouter = new Router();
 
-shoesRouter.post('/api/shoes', jsonParser, (request, response) => {
+shoesRouter.post('/api/shoes', jsonParser, (request, response, next) => {
   logger.log(logger.INFO, 'POST - processing a request');
   if (!request.body.coachName) {
     logger.log(logger.INFO, 'POST - responding with a 400 error code');
-    return response.sendStatus(400);
+    return next(new HttpErrors(400, 'title is required'));
   }
   return new Shoes(request.body).save()
     .then((shoes) => {
       logger.log(logger.INFO, 'POST - responding with a 200 status code');
       return response.json(shoes);
     })
-    .catch((error) => {
-      logger.log(logger.ERROR, '__POST_ERROR__');
-      logger.log(logger.ERROR, error);
-      return response.sendStatus(500);
-    });
+    .catch(next);
 });
 
-shoesRouter.get('/api/shoes/:id', (request, response) => {
-  logger.log(logger.INFO, 'GET - processing a request');
+shoesRouter.put('/api/notes/:id', jsonParser, (request, response, next) => {
+  const options = { runValidators: true, new: true };
 
+  return Shoes.findByIdAndUpdate(request.params.id, request.body, options)
+    .then((updatedShoes) => {
+      if (!updatedShoes) {
+        logger.log(logger.INFO, 'GET - responding with a 404 status - (!note)');
+        return next(new HttpErrors(404, 'note not found'));
+      }
+      logger.log(logger.INFO, 'GET - responding with a 200 status code');
+      return response.json(updatedShoes);
+    })
+    .catch(next);
+});
+
+shoesRouter.get('/api/shoes/:id', (request, response, next) => {
+  logger.log(logger.INFO, 'GET - processing a request');
   return Shoes.findById(request.params.id)
     .then((shoes) => {
       if (!shoes) {
         logger.log(logger.INFO, 'GET - responding with a 404 status code - (!shoes)');
-        return response.sendStatus(404);
+        return next(new HttpErrors(404, 'shoes not found'));
       }
       logger.log(logger.INFO, 'GET - responding with a 200 status code');
       return response.json(shoes);
     })
-    .catch((error) => {
-      if (error.message.toLowerCase().indexOf('cast to objectid failed') > -1) {
-        logger.log(logger.INFO, 'GET - responding with a 404 status code - objectId');
-        logger.log(logger.VERBOSE, `Could not parse the specific object id ${request.params.id}`);
-        return response.sendStatus(404);
-      }
-      logger.log(logger.ERROR, '__GET_ERROR__ Returning a 500 status code');
-      logger.log(logger.ERROR, error);
-      return response.sendStatus(500);
-    });
+    .catch(next);
 });
 
 
-shoesRouter.delete('/api/shoes/:id', (request, response) => {
-  logger.log(logger.INFO, 'GET - processing a request');
+shoesRouter.delete('/api/shoes/:id', (request, response, next) => {
+  logger.log(logger.INFO, 'DELETE - processing a request');
 
   return Shoes.findByIdAndRemove(request.params.id)
     .then((shoes) => {
@@ -65,13 +66,7 @@ shoesRouter.delete('/api/shoes/:id', (request, response) => {
       logger.log(logger.INFO, 'DELETE - responding with a 200 status code');
       return response.json(shoes);
     })
-    .catch((error) => {
-      if (error.message.toLowerCase().indexOf('cast to objectid failed') > -1) {
-        logger.log(logger.INFO, 'DELETE - responding with a 400 status code - objectId');
-        logger.log(logger.VERBOSE, `Could not parse the specific object id ${request.params.id}`);
-        return response.sendStatus(400);
-      }
-    });
+    .catch(next);
 });
 
 export default shoesRouter;
