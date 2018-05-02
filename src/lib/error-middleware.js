@@ -6,7 +6,7 @@ export default (error, request, response, next) => {
   logger.log(logger.ERROR, '__ERROR_MIDDLEWARE__');
   logger.log(logger.ERROR, error);
 
-  if(error.status) {
+  if (error.status) {
     logger.log(logger.INFO, `Responding with a ${error.status} code and the message ${error.message}`);
     return response.sendStatus(error.status);
   }

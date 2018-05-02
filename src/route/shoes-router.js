@@ -11,7 +11,7 @@ const jsonParser = bodyParser.json();
 const shoesRouter = new Router();
 
 shoesRouter.post('/api/shoes', jsonParser, (request, response, next) => {
-  logger.log(logger.INFO, 'POST - processing a request');
+  // logger.log(logger.INFO, 'POST - processing a request');
   if (!request.body.coachName) {
     logger.log(logger.INFO, 'POST - responding with a 400 error code');
     return next(new HttpErrors(400, 'title is required'));
@@ -52,7 +52,6 @@ shoesRouter.get('/api/shoes/:id', (request, response, next) => {
     })
     .catch(next);
 });
-
 
 shoesRouter.delete('/api/shoes/:id', (request, response, next) => {
   logger.log(logger.INFO, 'DELETE - processing a request');
