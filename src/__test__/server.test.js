@@ -85,17 +85,22 @@ describe('/api/shoes', () => {
         });
     });
   });
-  // describe('DELETE /api/shoes', () => {
-  //   test('should respond with 204 if there are no errors', () => {
-  //     let shoesToUpdate = null;
-  //     return pCreateShoesMock()
-  //       .then((shoesMock) => {
-  //       //  need to FIX
-  //
-  //       })
-  //       .then((response) => {
-  //         expect(response.status).toEqual(204);
-  //       });
-  //   });
-  // });
+  describe('DELETE /api/shoes', () => {
+    // test('sucess if responds with 204 if there are no errors', () => {
+    //   return pCreateShoesMock()
+    //     .then((shoes) => {
+    //       return superagent.delete(`${apiURL}/${shoes._id}`);
+    //     })
+    //     .then((response) => {
+    //       expect(response.status).toEqual(204);
+    //     });
+    // });
+    test('should respond with 404 if there is no shoes to be found', () => {
+      return superagent.get(`${apiURL}/badStuff`)
+        .then(Promise.reject)
+        .catch((response) => {
+          expect(response.status).toEqual(404);
+        });
+    });
+  });
 });
