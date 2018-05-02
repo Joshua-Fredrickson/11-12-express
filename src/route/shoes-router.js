@@ -55,7 +55,6 @@ shoesRouter.get('/api/shoes/:id', (request, response, next) => {
 
 shoesRouter.delete('/api/shoes/:id', (request, response, next) => {
   logger.log(logger.INFO, 'DELETE - processing a request');
-
   return Shoes.findByIdAndRemove(request.params.id)
     .then((shoes) => {
       if (!shoes.id()) {
