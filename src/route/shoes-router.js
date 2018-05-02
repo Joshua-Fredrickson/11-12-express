@@ -24,14 +24,14 @@ shoesRouter.post('/api/shoes', jsonParser, (request, response, next) => {
     .catch(next);
 });
 
-shoesRouter.put('/api/notes/:id', jsonParser, (request, response, next) => {
+shoesRouter.put('/api/shoes/:id', jsonParser, (request, response, next) => {
   const options = { runValidators: true, new: true };
 
   return Shoes.findByIdAndUpdate(request.params.id, request.body, options)
     .then((updatedShoes) => {
       if (!updatedShoes) {
-        logger.log(logger.INFO, 'GET - responding with a 404 status - (!note)');
-        return next(new HttpErrors(404, 'note not found'));
+        logger.log(logger.INFO, 'GET - responding with a 404 status - (!shoes)');
+        return next(new HttpErrors(404, 'Shoes not found'));
       }
       logger.log(logger.INFO, 'GET - responding with a 200 status code');
       return response.json(updatedShoes);

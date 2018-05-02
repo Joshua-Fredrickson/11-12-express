@@ -68,7 +68,6 @@ describe('/api/shoes', () => {
         });
     });
   });
-
   describe('PUT /api/notes', () => {
     test('should update a note and return a 200 status code', () => {
       let shoesToUpdate = null;
@@ -76,11 +75,11 @@ describe('/api/shoes', () => {
         .then((shoesMock) => {
           shoesToUpdate = shoesMock;
           return superagent.put(`${apiURL}/${shoesMock._id}`)
-            .send({ coachName: 'coachJOSH' });
+            .send({ coachName: 'coachJ' });
         })
         .then((response) => {
           expect(response.status).toEqual(200);
-          expect(response.body.coachName).toEqual('coachJOSH');
+          expect(response.body.coachName).toEqual('coachJ');
           expect(response.body.sport).toEqual(shoesToUpdate.sport);
           expect(response.body._id).toEqual(shoesToUpdate._id.toString());
         });
