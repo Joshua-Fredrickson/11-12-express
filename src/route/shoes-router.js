@@ -59,10 +59,10 @@ shoesRouter.delete('/api/shoes/:id', (request, response, next) => {
   return Shoes.findByIdAndRemove(request.params.id)
     .then((shoes) => {
       if (!shoes.id()) {
-        logger.log(logger.INFO, 'DELETE - responding with a 404 status code - (!shoes)');
-        return response.sendStatus(404);
+        logger.log(logger.INFO, 'DELETE - responding with a 400 status code - (!shoes)');
+        return next(new HttpErrors(400, 'Delete request failed'));
       }
-      logger.log(logger.INFO, 'DELETE - responding with a 200 status code');
+      logger.log(logger.INFO, 'DELETE - responding with a 204 status code');
       return response.json(shoes);
     })
     .catch(next);

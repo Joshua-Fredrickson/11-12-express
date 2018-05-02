@@ -68,8 +68,8 @@ describe('/api/shoes', () => {
         });
     });
   });
-  describe('PUT /api/notes', () => {
-    test('should update a note and return a 200 status code', () => {
+  describe('PUT /api/shoes', () => {
+    test('should update a shoes and return a 200 status code', () => {
       let shoesToUpdate = null;
       return pCreateShoesMock()
         .then((shoesMock) => {
@@ -85,4 +85,21 @@ describe('/api/shoes', () => {
         });
     });
   });
+  describe('DELETE /api/shoes/:_id', () => {
+    test('should update a shoes and return a 204 status code', () => {
+      let shoesToUpdate = null;
+      return pCreateShoesMock()
+        .then((shoesMock) => {
+          shoesToUpdate = shoesMock;
+          return superagent.delete(`${apiURL}/${shoesMock._id}`)
+            .send();
+        })
+        .then((response) => {
+          console.log(response.status);
+          expect(response.status).toEqual(204);
+        });
+    });
+  });
+
+
 });
