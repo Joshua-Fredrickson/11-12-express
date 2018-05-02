@@ -7,7 +7,7 @@ import { startServer, stopServer } from '../lib/server';
 
 const apiURL = `http://localhost:${process.env.PORT}/api/shoes`;
 
-const createShoesMock = () => {
+const pCreateShoesMock = () => {
   return new Shoes({
     coachName: faker.name.findName(),
     sport: faker.lorem.words(2),
@@ -49,7 +49,7 @@ describe('/api/shoes', () => {
   describe('GET /api/shoes', () => {
     test('should respond with 200 if there are no errors', () => {
       let shoesToTest = null;
-      return createShoesMock()
+      return pCreateShoesMock()
         .then((shoes) => {
           shoesToTest = shoes;
           return superagent.get(`${apiURL}/${shoes._id}`);
@@ -60,11 +60,29 @@ describe('/api/shoes', () => {
           expect(response.body.sport).toEqual(shoesToTest.sport);
         });
     });
-    test('should respond with 404 if there is an invalid ID', () => {
+    test('should respond with 404 if there is no shoes to be found', () => {
       return superagent.get(`${apiURL}/ThisIsAnInvalidId1`)
         .then(Promise.reject)
         .catch((response) => {
           expect(response.status).toEqual(404);
+        });
+    });
+  });
+
+  describe('PUT /api/notes', () => {
+    test('should update a note and return a 200 status code', () => {
+      let shoesToUpdate = null;
+      return pCreateShoesMock()
+        .then((shoesMock) => {
+          shoesToUpdate = shoesMock;
+          return superagent.put(`${apiURL}/${shoesMock._id}`)
+            .send({ coachName: 'coachJOSH' });
+        })
+        .then((response) => {
+          expect(response.status).toEqual(200);
+          expect(response.body.coachName).toEqual('coachJOSH');
+          expect(response.body.sport).toEqual(shoesToUpdate.sport);
+          expect(response.body._id).toEqual(shoesToUpdate._id.toString());
         });
     });
   });
